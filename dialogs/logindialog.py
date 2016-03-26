@@ -4,8 +4,7 @@ from PyQt5 import QtWidgets, QtSql
 from ui.ui_logindialog import Ui_LoginDialog
 from sqlalchemy.exc import OperationalError
 
-import icons
-from util import save_data, load_data
+from util import save_data, load_data, get_icon
 from dialogs.mainwindow import MainWindow
 
 class LoginDialog(QtWidgets.QDialog):
@@ -13,8 +12,7 @@ class LoginDialog(QtWidgets.QDialog):
         super(LoginDialog, self).__init__(parent)
         self.ui = Ui_LoginDialog()
         self.ui.setupUi(self)
-        icons.init_icons()
-        self.setWindowIcon(icons.icons["appicon"])
+        self.setWindowIcon(get_icon("appicon"))
         self.ui.buttonBox.accepted.connect(self.accepted)
         self.loadText()
     
@@ -44,7 +42,8 @@ class LoginDialog(QtWidgets.QDialog):
                 QtSql.QSqlDatabase.removeDatabase(name)
             QtWidgets.QMessageBox.critical(self, "Ошибка авторизации", "Не удалось установить соединение с СУБД с заданными параметрами. Убедитесь, что СУБД запущена, а данные для входа введены верно.")
         else:
-            MainWindow(dbase).show()
+            LoginDialog.wnd = MainWindow(dbase)
+            LoginDialog.wnd.show()
             password = password if self.ui.rememberPassword.isChecked() else ""
             save_data(login, password, dbname)
             self.accept()

@@ -1,5 +1,9 @@
 DROP DATABASE IF EXISTS dbcourse;
-CREATE DATABASE dbcourse;
+
+CREATE DATABASE dbcourse
+    DEFAULT CHARACTER SET utf8
+    DEFAULT COLLATE utf8_general_ci;
+
 USE dbcourse;
 
 CREATE TABLE customer(
@@ -75,9 +79,11 @@ CREATE TABLE detail(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     article varchar(50) NOT NULL,
     name varchar(50) NOT NULL,
+    description varchar(1000) NOT NULL,
     photo varchar(100) NULL,
     category varchar(50) NOT NULL,
-    warranty int NOT NULL
+    warranty int NOT NULL,
+    price int NOT NULL
 );
 
 CREATE TABLE order_detail(
