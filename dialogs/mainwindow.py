@@ -75,7 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.clientPassportEdit, "role": "edit",
                 "column": "passport"}
         )
-        self.setupForm(self._clientForm, self.ui.clientEditButton, self.ui.clientStack,
+        self.setupForm("_clientForm", self._clientForm, self.ui.clientEditButton, self.ui.clientStack,
             self.ui.clientReadPage, self.ui.clientWritePage)
         # Форма "Магазины":
         self._shopForm = GenericFormController("shop", self.dbase,
@@ -102,7 +102,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.shopAddressEdit, "role": "edit",
                 "column": "address"},
         )
-        self.setupForm(self._shopForm, self.ui.shopEditButton, self.ui.shopStack,
+        self.setupForm("_shopForm", self._shopForm, self.ui.shopEditButton, self.ui.shopStack,
             self.ui.shopReadPage, self.ui.shopWritePage)
         # Форма "Машины":
         self._carForm = PhotoFormController("car", self.dbase,
@@ -133,7 +133,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.carDeletePhotoButton, "role": "delete_photo",
                 "column": "photo"}
         )
-        self.setupForm(self._carForm, self.ui.carEditButton, self.ui.carStack,
+        self.setupForm("_carForm", self._carForm, self.ui.carEditButton, self.ui.carStack,
             self.ui.carReadPage, self.ui.carWritePage)
         # Форма "Детали":
         self._detailForm = PhotoFormController("detail", self.dbase,
@@ -176,7 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.detailDeletePhotoButton, "role": "delete_photo",
                 "column": "photo"}
         )
-        self.setupForm(self._detailForm, self.ui.detailEditButton, self.ui.detailStack,
+        self.setupForm("_detailForm", self._detailForm, self.ui.detailEditButton, self.ui.detailStack,
             self.ui.detailReadPage, self.ui.detailWritePage)
         # Форма "Работники":
         self._empForm = ForeignFormController("employee", self.dbase,
@@ -231,10 +231,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 "source": self.ui.empShopEdit, "table": "shop",
                 "column": "id", "format": "{name}"},
         )
-        self.setupForm(self._empForm, self.ui.empEditButton, self.ui.empStack,
+        self.setupForm("_empForm", self._empForm, self.ui.empEditButton, self.ui.empStack,
             self.ui.empReadPage, self.ui.empWritePage)
 
-    def setupForm(self, form, editbutton, stack, readpage, writepage):
+    def setupForm(self, attr, form, editbutton, stack, readpage, writepage):
         form.currentRecordChanged.connect(
             lambda: editbutton.setEnabled(True))
         form.currentRecordChanged.connect(
@@ -253,7 +253,7 @@ class MainWindow(QtWidgets.QMainWindow):
             editbutton.setEnabled(True)
         else:
             editbutton.setEnabled(False)
-
+        form.recordCommitted.connect(lambda: self._rebuildForm(attr, form))
 
     def actionTriggered(self, cur_action):
         mapping = {

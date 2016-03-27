@@ -4,7 +4,7 @@ from itertools import chain
 
 from PyQt5.QtWidgets import QDataWidgetMapper, QListView, QLabel, QPushButton, \
     QLineEdit, QTextEdit, QDateEdit, QPlainTextEdit, QMessageBox, QSpinBox
-from PyQt5.QtSql import QSqlRelationalTableModel, QSqlRecord
+from PyQt5.QtSql import QSqlTableModel, QSqlRecord
 from PyQt5.QtCore import QObject, pyqtSignal, QModelIndex, \
     QItemSelectionModel, QDate
 
@@ -20,10 +20,11 @@ class GenericFormController(QObject):
 
     def __init__(self, tablename, dbase, *widgets):
         super().__init__()
+        self._rebuildArgs = (tablename, dbase) + widgets
         self.tablename = tablename
         self.dbase = dbase
 
-        self.model = QSqlRelationalTableModel(db = dbase)
+        self.model = QSqlTableModel(db = dbase)
         self.model.setTable(tablename)
         self.model.select()
         self.mapper = QDataWidgetMapper()
