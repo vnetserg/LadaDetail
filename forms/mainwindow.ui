@@ -1743,52 +1743,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="1">
-                  <widget class="QComboBox" name="empShopProxyCombo"/>
-                 </item>
-                 <item row="3" column="1" colspan="2">
-                  <widget class="QDateEdit" name="empBirthdateEdit">
-                   <property name="displayFormat">
-                    <string>dd.MM.yyyy</string>
-                   </property>
-                   <property name="calendarPopup">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1" colspan="2">
-                  <widget class="QLineEdit" name="empFirstnameEdit"/>
-                 </item>
-                 <item row="8" column="1" colspan="2">
-                  <widget class="QSpinBox" name="empSalaryEdit">
-                   <property name="maximum">
-                    <number>1000000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>500</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1" colspan="2">
-                  <widget class="QDateEdit" name="empEmpdateEdit">
-                   <property name="displayFormat">
-                    <string>dd.MM.yyyy</string>
-                   </property>
-                   <property name="calendarPopup">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="2">
-                  <widget class="QSpinBox" name="empShopEdit">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1" colspan="2">
-                  <widget class="QLineEdit" name="empDepartmentEdit"/>
-                 </item>
                  <item row="8" column="0">
                   <widget class="QLabel" name="label_74">
                    <property name="font">
@@ -1805,14 +1759,105 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1" colspan="2">
+                 <item row="0" column="1" colspan="3">
                   <widget class="QLineEdit" name="empLastnameEdit"/>
                  </item>
-                 <item row="7" column="1" colspan="2">
+                 <item row="1" column="1" colspan="3">
+                  <widget class="QLineEdit" name="empFirstnameEdit"/>
+                 </item>
+                 <item row="2" column="1" colspan="3">
+                  <widget class="QLineEdit" name="empMiddlenameEdit"/>
+                 </item>
+                 <item row="3" column="1" colspan="3">
+                  <widget class="QDateEdit" name="empBirthdateEdit">
+                   <property name="displayFormat">
+                    <string>dd.MM.yyyy</string>
+                   </property>
+                   <property name="calendarPopup">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1" colspan="3">
+                  <widget class="QDateEdit" name="empEmpdateEdit">
+                   <property name="displayFormat">
+                    <string>dd.MM.yyyy</string>
+                   </property>
+                   <property name="calendarPopup">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1" colspan="3">
+                  <widget class="QStackedWidget" name="stackedWidget_2">
+                   <property name="currentIndex">
+                    <number>0</number>
+                   </property>
+                   <widget class="QWidget" name="page">
+                    <layout class="QHBoxLayout" name="horizontalLayout_13">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QComboBox" name="empShopProxyCombo"/>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="page_2">
+                    <layout class="QHBoxLayout" name="horizontalLayout_14">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="empShopEdit">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="6" column="1" colspan="3">
+                  <widget class="QLineEdit" name="empDepartmentEdit"/>
+                 </item>
+                 <item row="7" column="1" colspan="3">
                   <widget class="QLineEdit" name="empPositionEdit"/>
                  </item>
-                 <item row="2" column="1" colspan="2">
-                  <widget class="QLineEdit" name="empMiddlenameEdit"/>
+                 <item row="8" column="1" colspan="3">
+                  <widget class="QSpinBox" name="empSalaryEdit">
+                   <property name="maximum">
+                    <number>1000000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>500</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -3021,7 +3066,7 @@
             </widget>
            </item>
            <item row="0" column="0" colspan="2">
-            <widget class="QTableView" name="carDetailListView"/>
+            <widget class="QListView" name="carDetailListView"/>
            </item>
           </layout>
          </widget>

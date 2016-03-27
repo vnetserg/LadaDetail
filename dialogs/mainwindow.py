@@ -8,6 +8,7 @@ from controllers.genericformcontroller import GenericFormController
 from controllers.photoformcontroller import PhotoFormController
 from controllers.foreignformcontroller import ForeignFormController
 from controllers.warehousecontroller import WarehouseController
+from controllers.cardetailcontroller import CarDetailController
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, dbase, parent = None):
@@ -238,6 +239,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self._warehouseForm = WarehouseController(self.ui.warehouseShopView,
             self.ui.warehouseDetailView, self.ui.warehouseAddButton,
             self.ui.warehouseEditButton, self.ui.warehouseDeleteButton, self.dbase)
+        # Форма "Запчасти машин":
+        self._carDetailForm = CarDetailController(self.ui.carListView_2,
+            self.ui.carDetailListView, self.ui.carDetailAddButton,
+            self.ui.carDetailDeleteButton, self.dbase)
 
     def setupForm(self, form, editbutton, stack, readpage, writepage):
         form.currentRecordChanged.connect(
@@ -268,7 +273,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.view_warehouse: (self.ui.page_warehouse, self._warehouseForm),
             self.ui.view_details: (self.ui.page_details, self._detailForm),
             self.ui.view_cars: (self.ui.page_cars, self._carForm),
-            self.ui.view_cardetails: (self.ui.page_cardetails, None)
+            self.ui.view_cardetails: (self.ui.page_cardetails, self._carDetailForm)
         }
         for action in mapping.keys():
             action.setChecked(action == cur_action)
@@ -276,3 +281,4 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentWidget(page)
         if form:
             form.update()
+            form.selectRow(0)

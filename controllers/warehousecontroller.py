@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QObject, Qt
+from PyQt5.QtCore import QObject, Qt, QItemSelectionModel
 from PyQt5.QtSql import QSqlTableModel, QSqlQueryModel, QSqlQuery
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
@@ -48,6 +48,8 @@ class WarehouseController(QObject):
         self.table.selectionModel().currentChanged.connect(self.tableSelectionChanged)
         if not self.detailModel.query().isActive():
             print(self.detailModel.lastError().text())
+        self.deleteButton.setEnabled(False)
+        self.editButton.setEnabled(False)
 
     def tableSelectionChanged(self, cur, prev):
         if cur.isValid():
@@ -83,9 +85,7 @@ class WarehouseController(QObject):
         if not query.isActive():
             print(query.lastError().text())
         self.setShopIndex(self.list.currentIndex().row())
-
-        if len(details) == 1:
-            self.addButton.setEnabled(False)
+        self.table.selectionModel().clearSelection()
 
     def editButtonClicked(self):
         detail = self.detailModel.record(self.table.currentIndex().row())
@@ -121,3 +121,8 @@ class WarehouseController(QObject):
     def update(self):
         self.shopModel.select()
         self.list.reset()
+
+    def selectRow(self, row):
+        self.list.selectionModel().clearSelection()
+        self.list.selectionModel().setCurrentIndex(
+            self.shopModel.index(row, 0), QItemSelectionModel.Select)

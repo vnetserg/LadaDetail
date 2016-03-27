@@ -47,8 +47,7 @@ class GenericFormController(QObject):
             self.addWidget(**widget)
 
         if self.model.rowCount() > 0:
-            self._view.selectionModel().setCurrentIndex(
-                self.model.index(0, 0), QItemSelectionModel.Select)
+            self.selectRow(0)
 
     def addWidget(self, widget, role, **kw):
         if role == "view" and isinstance(widget, QListView):
@@ -86,6 +85,7 @@ class GenericFormController(QObject):
             self._deleteButton.setEnabled(True)
         else:
             self._deleteButton.setEnabled(False)
+            self._clearAll()
         self.currentRecordChanged.emit()
 
     def _doCommit(self):
@@ -97,9 +97,7 @@ class GenericFormController(QObject):
             if self.model.setRecord(ind, record):
                 self.model.submitAll()
                 self.model.select()
-                self._view.selectionModel().clearSelection()
-                self._view.selectionModel().setCurrentIndex(
-                    self.model.index(ind, 0), QItemSelectionModel.Select)
+                self.selectRow(ind)
                 self.recordCommitted.emit()
                 self._view.reset()
             else:
@@ -115,9 +113,7 @@ class GenericFormController(QObject):
                 self._insertionMode = False
                 self.model.submitAll()
                 self.model.select()
-                self._view.selectionModel().clearSelection()
-                self._view.selectionModel().setCurrentIndex(
-                    self.model.index(row, 0), QItemSelectionModel.Select)
+                self.selectRow(row)
                 self.recordCommitted.emit()
                 for i in range(self.model.rowCount()):
                     self._view.setRowHidden(i, False)
@@ -126,8 +122,7 @@ class GenericFormController(QObject):
         self.mapper.revert()
         if self._insertionMode is True:
             self._insertionMode = False
-            self._view.selectionModel().setCurrentIndex(
-                self.model.index(0, 0), QItemSelectionModel.Select)
+            self.selectRow(0)
         self.recordRollbacked.emit()
 
     def _doDelete(self):
@@ -136,9 +131,7 @@ class GenericFormController(QObject):
         self._view.setRowHidden(row, True)
         for i in chain(range(row-1, -1, -1), range(row+1, self.model.rowCount())):
             if not self._view.isRowHidden(i):
-                self._view.selectionModel().setCurrentIndex(
-                    self.model.index(i, 0), QItemSelectionModel.Select)
-                return
+                return self.selectRow(i)
         self._deleteButton.setEnabled(False)
         self._clearAll()
     
@@ -206,3 +199,8 @@ class GenericFormController(QObject):
 
     def update(self):
         self.model.select()
+
+    def selectRow(self, row):
+        self._view.selectionModel().clearSelection()
+        self._view.selectionModel().setCurrentIndex(
+            self.model.index(row, 0), QItemSelectionModel.Select)
