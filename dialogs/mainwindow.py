@@ -7,6 +7,7 @@ from util import get_icon
 from controllers.genericformcontroller import GenericFormController
 from controllers.photoformcontroller import PhotoFormController
 from controllers.foreignformcontroller import ForeignFormController
+from controllers.warehousecontroller import WarehouseController
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, dbase, parent = None):
@@ -75,7 +76,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.clientPassportEdit, "role": "edit",
                 "column": "passport"}
         )
-        self.setupForm("_clientForm", self._clientForm, self.ui.clientEditButton, self.ui.clientStack,
+        self.setupForm(self._clientForm, self.ui.clientEditButton, self.ui.clientStack,
             self.ui.clientReadPage, self.ui.clientWritePage)
         # Форма "Магазины":
         self._shopForm = GenericFormController("shop", self.dbase,
@@ -102,7 +103,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.shopAddressEdit, "role": "edit",
                 "column": "address"},
         )
-        self.setupForm("_shopForm", self._shopForm, self.ui.shopEditButton, self.ui.shopStack,
+        self.setupForm(self._shopForm, self.ui.shopEditButton, self.ui.shopStack,
             self.ui.shopReadPage, self.ui.shopWritePage)
         # Форма "Машины":
         self._carForm = PhotoFormController("car", self.dbase,
@@ -133,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.carDeletePhotoButton, "role": "delete_photo",
                 "column": "photo"}
         )
-        self.setupForm("_carForm", self._carForm, self.ui.carEditButton, self.ui.carStack,
+        self.setupForm(self._carForm, self.ui.carEditButton, self.ui.carStack,
             self.ui.carReadPage, self.ui.carWritePage)
         # Форма "Детали":
         self._detailForm = PhotoFormController("detail", self.dbase,
@@ -176,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow):
             {"widget": self.ui.detailDeletePhotoButton, "role": "delete_photo",
                 "column": "photo"}
         )
-        self.setupForm("_detailForm", self._detailForm, self.ui.detailEditButton, self.ui.detailStack,
+        self.setupForm(self._detailForm, self.ui.detailEditButton, self.ui.detailStack,
             self.ui.detailReadPage, self.ui.detailWritePage)
         # Форма "Работники":
         self._empForm = ForeignFormController("employee", self.dbase,
@@ -231,10 +232,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 "source": self.ui.empShopEdit, "table": "shop",
                 "column": "id", "format": "{name}"},
         )
-        self.setupForm("_empForm", self._empForm, self.ui.empEditButton, self.ui.empStack,
+        self.setupForm(self._empForm, self.ui.empEditButton, self.ui.empStack,
             self.ui.empReadPage, self.ui.empWritePage)
+        # Форма "Склад":
+        self._warehouseForm = WarehouseController(self.ui.warehouseShopView,
+            self.ui.warehouseDetailView, self.ui.warehouseAddButton,
+            self.ui.warehouseEditButton, self.ui.warehouseDeleteButton, self.dbase)
 
-    def setupForm(self, attr, form, editbutton, stack, readpage, writepage):
+    def setupForm(self, form, editbutton, stack, readpage, writepage):
         form.currentRecordChanged.connect(
             lambda: editbutton.setEnabled(True))
         form.currentRecordChanged.connect(
@@ -253,19 +258,21 @@ class MainWindow(QtWidgets.QMainWindow):
             editbutton.setEnabled(True)
         else:
             editbutton.setEnabled(False)
-        form.recordCommitted.connect(lambda: self._rebuildForm(attr, form))
 
     def actionTriggered(self, cur_action):
         mapping = {
-            self.ui.view_clients: self.ui.page_clients,
-            self.ui.view_orders: self.ui.page_orders,
-            self.ui.view_employees: self.ui.page_employees,
-            self.ui.view_shops: self.ui.page_shops,
-            self.ui.view_warehouse: self.ui.page_warehouse,
-            self.ui.view_details: self.ui.page_details,
-            self.ui.view_cars: self.ui.page_cars,
-            self.ui.view_cardetails: self.ui.page_cardetails
+            self.ui.view_clients: (self.ui.page_clients, self._clientForm),
+            self.ui.view_orders: (self.ui.page_orders, None),
+            self.ui.view_employees: (self.ui.page_employees, self._empForm),
+            self.ui.view_shops: (self.ui.page_shops, self._shopForm),
+            self.ui.view_warehouse: (self.ui.page_warehouse, self._warehouseForm),
+            self.ui.view_details: (self.ui.page_details, self._detailForm),
+            self.ui.view_cars: (self.ui.page_cars, self._carForm),
+            self.ui.view_cardetails: (self.ui.page_cardetails, None)
         }
         for action in mapping.keys():
             action.setChecked(action == cur_action)
-        self.ui.stackedWidget.setCurrentWidget(mapping[cur_action])
+        page, form = mapping[cur_action]
+        self.ui.stackedWidget.setCurrentWidget(page)
+        if form:
+            form.update()

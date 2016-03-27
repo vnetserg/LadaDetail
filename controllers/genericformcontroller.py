@@ -9,7 +9,6 @@ from PyQt5.QtCore import QObject, pyqtSignal, QModelIndex, \
     QItemSelectionModel, QDate
 
 from models.complexlistmodel import ComplexListModel
-from delegates.nulldelegate import NullDelegate
 
 class GenericFormController(QObject):
     currentRecordChanged = pyqtSignal()
@@ -91,14 +90,18 @@ class GenericFormController(QObject):
 
     def _doCommit(self):
         if self._insertionMode is False:
-            if self.mapper.submit():
-                ind = self.mapper.currentIndex()
-                record = self.model.record(ind)
-                self._recordPostprocess(record)
-                self.model.setRecord(ind, record)
+            ind = self.mapper.currentIndex()
+            record = self._getRecord()
+            old_record = self.model.record(ind)
+            record.setValue("id", old_record.value("id"))
+            if self.model.setRecord(ind, record):
                 self.model.submitAll()
                 self.model.select()
+                self._view.selectionModel().clearSelection()
+                self._view.selectionModel().setCurrentIndex(
+                    self.model.index(ind, 0), QItemSelectionModel.Select)
                 self.recordCommitted.emit()
+                self._view.reset()
             else:
                 print("Commit error:", self.model.lastError().text())
                 QMessageBox.critical(None, "Ошибка редактирования",
@@ -112,10 +115,12 @@ class GenericFormController(QObject):
                 self._insertionMode = False
                 self.model.submitAll()
                 self.model.select()
-                self.recordCommitted.emit()
                 self._view.selectionModel().clearSelection()
                 self._view.selectionModel().setCurrentIndex(
                     self.model.index(row, 0), QItemSelectionModel.Select)
+                self.recordCommitted.emit()
+                for i in range(self.model.rowCount()):
+                    self._view.setRowHidden(i, False)
 
     def _doRollback(self):
         self.mapper.revert()
@@ -143,7 +148,7 @@ class GenericFormController(QObject):
         self._clearAll()
         self.recordInserted.emit()
 
-    def _appendCurrent(self):
+    def _getRecord(self):
         record = QSqlRecord()
         for i, col in sorted((i, col) for col, i in self._columns.items()):
             record.append(self.model.record().field(i))
@@ -152,6 +157,10 @@ class GenericFormController(QObject):
             else:
                 record.setValue(i, None)
         self._recordPostprocess(record)
+        return record
+
+    def _appendCurrent(self):
+        record = self._getRecord()
         if not self.model.insertRecord(-1, record):
             print("Append error:", self.model.lastError().text())
             QMessageBox.critical(None, "Ошибка редактирования",
@@ -194,3 +203,6 @@ class GenericFormController(QObject):
         if not text:
             return None
         return text
+
+    def update(self):
+        self.model.select()

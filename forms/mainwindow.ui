@@ -33,7 +33,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_cars">
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -2900,12 +2900,18 @@
        <layout class="QHBoxLayout" name="horizontalLayout_9">
         <item>
          <widget class="QGroupBox" name="groupBox_11">
+          <property name="maximumSize">
+           <size>
+            <width>194</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="title">
            <string>Магазины</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">
            <item row="0" column="0" colspan="2">
-            <widget class="QListView" name="detailShopListView">
+            <widget class="QListView" name="warehouseShopView">
              <property name="maximumSize">
               <size>
                <width>178</width>
@@ -2922,9 +2928,52 @@
           <property name="title">
            <string>Склад магазина</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <widget class="QTableView" name="warehouseTableView"/>
+          <layout class="QGridLayout" name="gridLayout_38">
+           <item row="2" column="2">
+            <widget class="QPushButton" name="warehouseDeleteButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Удалить</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="warehouseAddButton">
+             <property name="text">
+              <string>Добавить</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="3">
+            <widget class="QTableView" name="warehouseDetailView">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderStretchLastSection">
+              <bool>false</bool>
+             </attribute>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="warehouseEditButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Редактировать</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>

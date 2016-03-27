@@ -82,4 +82,9 @@ class ForeignFormController(GenericFormController):
 
     def _doCommit(self):
         super()._doCommit()
+
+    def update(self):
+        super().update()
+        for source in self._sources.keys():
+            self._updateSourceRecords(source)
         
