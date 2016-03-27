@@ -812,7 +812,7 @@ class Ui_MainWindow(object):
         self.empEmpdateEdit.setObjectName("empEmpdateEdit")
         self.gridLayout_17.addWidget(self.empEmpdateEdit, 4, 1, 1, 2)
         self.empShopEdit = QtWidgets.QSpinBox(self.empWritePage)
-        self.empShopEdit.setReadOnly(False)
+        self.empShopEdit.setReadOnly(True)
         self.empShopEdit.setObjectName("empShopEdit")
         self.gridLayout_17.addWidget(self.empShopEdit, 5, 2, 1, 1)
         self.empDepartmentEdit = QtWidgets.QLineEdit(self.empWritePage)

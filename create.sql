@@ -34,7 +34,7 @@ CREATE TABLE employee(
     birthdate date NOT NULL,
     passport varchar(250) NULL,
     address varchar(250) NULL,
-    department varchar(100) NULL,
+    department varchar(100) NOT NULL,
     shop_id INT NOT NULL,
     position varchar(100) NOT NULL,
     empdate date NOT NULL,

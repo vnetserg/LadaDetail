@@ -80,7 +80,7 @@ class GenericFormController(QObject):
     def recordsCount(self):
         return self.model.rowCount()
 
-    def _selectionChanged(self, cur, prev):
+    def _selectionChanged(self, cur, prev = None):
         if cur.isValid():
             self.mapper.setCurrentModelIndex(self.model.index(cur.row(), cur.column()))
             self._deleteButton.setEnabled(True)
@@ -99,7 +99,7 @@ class GenericFormController(QObject):
                 self.model.select()
                 self.recordCommitted.emit()
             else:
-                print(self.model.lastError().text())
+                print("Commit error:", self.model.lastError().text())
                 QMessageBox.critical(None, "Ошибка редактирования",
                     "Не удалось внести данные в таблицу: не все обязательные поля заполнены.")
         else:
@@ -118,6 +118,10 @@ class GenericFormController(QObject):
 
     def _doRollback(self):
         self.mapper.revert()
+        if self._insertionMode is True:
+            self._insertionMode = False
+            self._view.selectionModel().setCurrentIndex(
+                self.model.index(0, 0), QItemSelectionModel.Select)
         self.recordRollbacked.emit()
 
     def _doDelete(self):
@@ -148,7 +152,7 @@ class GenericFormController(QObject):
                 record.setValue(i, None)
         self._recordPostprocess(record)
         if not self.model.insertRecord(-1, record):
-            print(self.model.lastError().text())
+            print("Append error:", self.model.lastError().text())
             QMessageBox.critical(None, "Ошибка редактирования",
                 "Не удалось внести данные в таблицу: не все обязательные поля заполнены.")
             return False
