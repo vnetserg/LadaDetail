@@ -1,22 +1,17 @@
 from PyQt5 import QtWidgets
 
-class NullDelegate(QtWidgets.QStyledItemDelegate):
+class NullDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent = None):
-        super(NullDelegate).__init__(parent)
+        super().__init__(parent)
     
-    '''
-    def createEditor(self, parent, option, index):
-        editor = QtWidgets.QWidget(parent)
-        # ...configure editor if needed...
-        return editor
-    '''
-    
-    '''
     def setEditorData(self, editor, index):
-        # ...set editor data...
-    '''
+        editor.setProperty("text", index.data());
     
-    '''
     def setModelData(self, editor, model, index):
-        model.setData(index, "data")
-    '''
+        text = editor.property("text").strip()
+        if text == "":
+            print("NULL")
+            model.setData(index, None)
+        else:
+            print("NOT NULL")
+            model.setData(index, text)

@@ -3,12 +3,13 @@
 from itertools import chain
 
 from PyQt5.QtWidgets import QDataWidgetMapper, QListView, QLabel, QPushButton, \
-    QLineEdit, QTextEdit, QDateEdit, QPlainTextEdit
+    QLineEdit, QTextEdit, QDateEdit, QPlainTextEdit, QMessageBox, QSpinBox
 from PyQt5.QtSql import QSqlRelationalTableModel, QSqlRecord
 from PyQt5.QtCore import QObject, pyqtSignal, QModelIndex, \
-    QItemSelectionModel
+    QItemSelectionModel, QDate
 
 from models.complexlistmodel import ComplexListModel
+from delegates.nulldelegate import NullDelegate
 
 class GenericFormController(QObject):
     currentRecordChanged = pyqtSignal()
@@ -29,7 +30,7 @@ class GenericFormController(QObject):
         self.mapper.setModel(self.model)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)
 
-        record = self.model.record(0)
+        record = self.model.record()
         self._columns = {record.field(i).name(): i for i in range(record.count())}
         
         self._view = None
@@ -72,6 +73,9 @@ class GenericFormController(QObject):
         elif role == "rollback" and isinstance(widget, QPushButton):
             self._rollbackButton = widget
             widget.clicked.connect(self._doRollback)
+        else:
+            raise ValueError("Unknown widget: {} (role '{}')".format(
+                widget.__class__.__name__, role))
 
     def recordsCount(self):
         return self.model.rowCount()
@@ -87,21 +91,30 @@ class GenericFormController(QObject):
     def _doCommit(self):
         if self._insertionMode is False:
             if self.mapper.submit():
+                ind = self.mapper.currentIndex()
+                record = self.model.record(ind)
+                self._recordPostprocess(record)
+                self.model.setRecord(ind, record)
+                self.model.submitAll()
                 self.model.select()
                 self.recordCommitted.emit()
             else:
-                QtWidgets.QMessageBox.critical(self, "Ошибка редактирования",
+                print(self.model.lastError().text())
+                QMessageBox.critical(None, "Ошибка редактирования",
                     "Не удалось внести данные в таблицу: не все обязательные поля заполнены.")
         else:
-            self._insertionMode = False
             row = self.model.rowCount()
             self._view.model().beginInsertRows(QModelIndex(), row, row)
-            self._appendCurrent()
+            res = self._appendCurrent()
             self._view.model().endInsertRows()
-            self.recordCommitted.emit()
-            self._view.selectionModel().clearSelection()
-            self._view.selectionModel().setCurrentIndex(
-                self.model.index(row, 0), QItemSelectionModel.Select)
+            if res:
+                self._insertionMode = False
+                self.model.submitAll()
+                self.model.select()
+                self.recordCommitted.emit()
+                self._view.selectionModel().clearSelection()
+                self._view.selectionModel().setCurrentIndex(
+                    self.model.index(row, 0), QItemSelectionModel.Select)
 
     def _doRollback(self):
         self.mapper.revert()
@@ -117,53 +130,62 @@ class GenericFormController(QObject):
                     self.model.index(i, 0), QItemSelectionModel.Select)
                 return
         self._deleteButton.setEnabled(False)
-        for widget in chain(self._displays, self._edits.values()):
-            self._setWidgetText(widget, "")
+        self._clearAll()
     
     def _doInsert(self):
         self._insertionMode = True
-        for widget in chain(self._displays, self._edits.values()):
-            self._setWidgetText(widget, "")
+        self._view.selectionModel().clearSelection()
+        self._clearAll()
         self.recordInserted.emit()
-        '''
-        row = self.model.rowCount()
-        self._view.model().beginInsertRows(QModelIndex(), row, row)
-        self.model.insertRows(row, 1)
-        self._view.model().endInsertRows()
-        self._view.selectionModel().setCurrentIndex(
-            self.model.index(row, 0), QItemSelectionModel.Select)
-        self._deleteButton.setEnabled(True)
-        '''
 
     def _appendCurrent(self):
         record = QSqlRecord()
         for i, col in sorted((i, col) for col, i in self._columns.items()):
-            record.append(self.model.record(0).field(i))
+            record.append(self.model.record().field(i))
             if col in self._edits:
-                record.setValue(i, self._getWidgetText(self._edits[col]))
+                record.setValue(i, self._getWidgetValue(self._edits[col]))
             else:
                 record.setValue(i, None)
+        self._recordPostprocess(record)
         if not self.model.insertRecord(-1, record):
             print(self.model.lastError().text())
-        self.model.submitAll()
-        self.model.select()
+            QMessageBox.critical(None, "Ошибка редактирования",
+                "Не удалось внести данные в таблицу: не все обязательные поля заполнены.")
+            return False
+        return True
 
-    def _setWidgetText(self, widget, text):
+    def _recordPostprocess(self, record):
+        # Для переопределения в потомках
+        pass
+
+    def _clearAll(self):
+        for widget in chain(self._displays, self._edits.values()):
+            self._clearWidget(widget)
+
+    def _clearWidget(self, widget):
         if isinstance(widget, QLabel) or isinstance(widget, QLineEdit):
-            widget.setText(text)
+            widget.setText("")
         elif isinstance(widget, QTextEdit) or isinstance(widget, QPlainTextEdit):
-            widget.setPlainText(text)
+            widget.setPlainText("")
         elif isinstance(widget, QDateEdit):
-            pass
+            widget.setDate(QDate.currentDate())
+        elif isinstance(widget, QSpinBox):
+            widget.setValue(0)
         else:
             raise ValueError("Unknown widget type: {}".format(widget.__class__.__name__))
 
-    def _getWidgetText(self, widget):
+    def _getWidgetValue(self, widget):
         if isinstance(widget, QLabel) or isinstance(widget, QLineEdit):
-            return widget.text()
+            text = widget.text()
         elif isinstance(widget, QTextEdit) or isinstance(widget, QPlainTextEdit):
-            return widget.toPlainText()
+            text = widget.toPlainText()
         elif isinstance(widget, QDateEdit):
-            return widget.date().toString("YYYY-MM-dd")
+            return widget.date()
+        elif isinstance(widget, QSpinBox):
+            return widget.value()
         else:
             raise ValueError("Unknown widget type: {}".format(widget.__class__.__name__))
+        text = text.strip()
+        if not text:
+            return None
+        return text
