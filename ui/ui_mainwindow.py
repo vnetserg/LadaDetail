@@ -1807,7 +1807,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.view_cardetails)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(7)
+        self.stackedWidget.setCurrentIndex(1)
         self.carStack.setCurrentIndex(0)
         self.clientStack.setCurrentIndex(0)
         self.empStack.setCurrentIndex(0)

@@ -71,7 +71,6 @@ class CarDetailController(QObject):
         car_id = car.value("id")
         uery = QSqlQuery("INSERT INTO car_detail (car_id, detail_id) \
             VALUES ({}, {})".format(car_id, detail_id))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.setCarIndex(self.carList.currentIndex().row())
@@ -84,7 +83,6 @@ class CarDetailController(QObject):
         query = QSqlQuery("DELETE FROM car_detail WHERE \
             car_id={} AND detail_id={} LIMIT 1".format(
                 car.value("id"), detail.value("id")))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.setCarIndex(self.carList.currentIndex().row())

@@ -66,6 +66,8 @@ CREATE TABLE orders(
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+ALTER TABLE orders AUTO_INCREMENT=10001;
+
 CREATE TABLE car(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name varchar(50) NOT NULL,
@@ -82,7 +84,9 @@ CREATE TABLE detail(
     photo varchar(100) NULL,
     category varchar(50) NOT NULL,
     warranty int NOT NULL,
-    price int NOT NULL
+    price int NOT NULL,
+
+    UNIQUE(article)
 );
 
 CREATE TABLE order_detail(

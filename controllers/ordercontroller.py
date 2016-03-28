@@ -15,6 +15,7 @@ class OrderController(QObject):
         self.dbase = dbase
 
         form.currentRecordChanged.connect(self.recordChanged)
+        form.recordInserted.connect(lambda: self.recordChanged(None))
 
         self.addButton.clicked.connect(self.addButtonClicked)
         self.editButton.clicked.connect(self.editButtonClicked)
@@ -28,13 +29,17 @@ class OrderController(QObject):
         else:
             self.addButton.setEnabled(True)
             self.detailModel = QSqlQueryModel()
-            query = "SELECT detail.id as id, CONCAT(detail.article, \": \", detail.name) as dtl, order_detail.quantity as qnt \
+            query = "SELECT detail.id as id, detail.article as article, detail.name as name, order_detail.quantity as qnt, \
+                    detail.price as sole_price, detail.price*order_detail.quantity as total_price\
                 FROM order_detail INNER JOIN detail \
                 ON order_detail.detail_id = detail.id \
-                WHERE order_detail.order_id={} ORDER BY dtl".format(record.value("id"))
+                WHERE order_detail.order_id={} ORDER BY article".format(record.value("id"))
             self.detailModel.setQuery(query)
-            self.detailModel.setHeaderData(1, Qt.Horizontal, "Наименование")
-            self.detailModel.setHeaderData(2, Qt.Horizontal, "Количество")
+            self.detailModel.setHeaderData(1, Qt.Horizontal, "Артикул")
+            self.detailModel.setHeaderData(2, Qt.Horizontal, "Наименование")
+            self.detailModel.setHeaderData(3, Qt.Horizontal, "Количество")
+            self.detailModel.setHeaderData(4, Qt.Horizontal, "Цена за штуку")
+            self.detailModel.setHeaderData(5, Qt.Horizontal, "Суммарная цена")
             self.orderTable.setModel(self.detailModel)
             self.orderTable.hideColumn(0)
             self.orderTable.resizeColumnsToContents()
@@ -73,7 +78,6 @@ class OrderController(QObject):
         order_id = order.value("id")
         query = QSqlQuery("INSERT INTO order_detail (order_id, detail_id, quantity) \
             VALUES ({}, {}, {})".format(order_id, detail_id, qnt))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.form.update()

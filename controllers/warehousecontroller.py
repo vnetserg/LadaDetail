@@ -81,7 +81,6 @@ class WarehouseController(QObject):
         shop_id = shop.value("id")
         query = QSqlQuery("INSERT INTO shop_detail (shop_id, detail_id, quantity) \
             VALUES ({}, {}, {})".format(shop_id, detail_id, qnt))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.setShopIndex(self.list.currentIndex().row())
@@ -101,7 +100,6 @@ class WarehouseController(QObject):
             query = QSqlQuery("DELETE FROM shop_detail WHERE \
                 shop_id={} AND detail_id={} LIMIT 1".format(
                     shop.value("id"), detail.value("id")))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.setShopIndex(self.list.currentIndex().row())
@@ -113,7 +111,6 @@ class WarehouseController(QObject):
         query = QSqlQuery("DELETE FROM shop_detail WHERE \
             shop_id={} AND detail_id={} LIMIT 1".format(
                 shop.value("id"), detail.value("id")))
-        query.exec_()
         if not query.isActive():
             print(query.lastError().text())
         self.setShopIndex(self.list.currentIndex().row())
