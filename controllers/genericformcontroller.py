@@ -130,6 +130,7 @@ class GenericFormController(QObject):
         row = self._view.selectionModel().currentIndex().row()
         self.model.removeRow(row)
         self._view.setRowHidden(row, True)
+        self.recordDeleted.emit()
         for i in chain(range(row-1, -1, -1), range(row+1, self.model.rowCount())):
             if not self._view.isRowHidden(i):
                 return self.selectRow(i)
@@ -211,6 +212,8 @@ class GenericFormController(QObject):
         else:
             row = 0
         self.model.select()
+        for i in range(self.model.rowCount()):
+            self._view.setRowHidden(i, False)
         self.selectRow(row)
 
     def selectRow(self, row):

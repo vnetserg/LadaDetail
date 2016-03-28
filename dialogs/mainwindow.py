@@ -293,11 +293,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.orderReadPage, self.ui.orderWritePage)
         self._orderForm = OrderController(orderForm, self.ui.orderDetailView,
             self.ui.orderDetailAddButton, self.ui.orderDetailEditButton,
-            self.ui.orderDetailDeleteButton, self.dbase)
+            self.ui.orderDetailDeleteButton, self.dbase, self)
 
     def setupForm(self, form, editbutton, stack, readpage, writepage):
         form.currentRecordChanged.connect(
-            lambda cur: editbutton.setEnabled(True))
+            lambda cur: editbutton.setEnabled(bool(cur)))
         form.currentRecordChanged.connect(
             lambda cur: stack.setCurrentWidget(readpage))
         form.recordDeleted.connect(

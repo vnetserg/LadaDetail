@@ -79,6 +79,9 @@ class ForeignFormController(GenericFormController):
             records = self._sources[source]["records"]
             if records:
                 source.setValue(records[0].value(self._sources[source]["column"]))
+            ###
+            #for display in self._proxyDisplays[source]:
+            #        display["widget"].setText("")
 
     def _selectionChanged(self, cur, prev = None):
         super()._selectionChanged(cur, prev)

@@ -5,7 +5,7 @@ from PyQt5.QtSql import QSqlQueryModel, QSqlQuery
 from PyQt5.QtWidgets import QInputDialog
 
 class OrderController(QObject):
-    def __init__(self, form, orderTable, addButton, editButton, deleteButton, dbase):
+    def __init__(self, form, orderTable, addButton, editButton, deleteButton, dbase, mainwindow):
         super().__init__()
         self.form = form
         self.orderTable = orderTable
@@ -13,19 +13,23 @@ class OrderController(QObject):
         self.editButton = editButton
         self.deleteButton = deleteButton
         self.dbase = dbase
+        self.mainwindow = mainwindow
 
         form.currentRecordChanged.connect(self.recordChanged)
         form.recordInserted.connect(lambda: self.recordChanged(None))
+        form.recordDeleted.connect(lambda: self.recordChanged(None))
 
         self.addButton.clicked.connect(self.addButtonClicked)
         self.editButton.clicked.connect(self.editButtonClicked)
         self.deleteButton.clicked.connect(self.deleteButtonClicked)
 
     def recordChanged(self, record):
+        #print("record changed", record)
         if record is None:
             for button in (self.addButton, self.editButton, self.deleteButton):
                 button.setEnabled(False)
             self.orderTable.setModel(None)
+            self._hiddingHack(True)
         else:
             self.addButton.setEnabled(True)
             self.detailModel = QSqlQueryModel()
@@ -48,6 +52,18 @@ class OrderController(QObject):
                 print(self.detailModel.lastError().text())
             self.deleteButton.setEnabled(False)
             self.editButton.setEnabled(False)
+            self._hiddingHack(False)
+
+    def _hiddingHack(self, val):
+        ui = self.mainwindow.ui
+        if val is True:
+            ui.client_hack.setCurrentWidget(ui.client_hide_page)
+            ui.shop_hack.setCurrentWidget(ui.shop_hide_page)
+            ui.emp_hack.setCurrentWidget(ui.emp_hide_page)
+        else:
+            ui.client_hack.setCurrentWidget(ui.client_ok_page)
+            ui.shop_hack.setCurrentWidget(ui.shop_ok_page)
+            ui.emp_hack.setCurrentWidget(ui.emp_ok_page)
 
     def tableSelectionChanged(self, cur, prev):
         if cur.isValid():
