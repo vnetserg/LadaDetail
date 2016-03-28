@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from PyQt5.QtCore import QObject, Qt, QItemSelectionModel
 from PyQt5.QtSql import QSqlTableModel, QSqlQueryModel, QSqlQuery
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
@@ -93,5 +95,11 @@ class CarDetailController(QObject):
             self.carModel.index(row, 0), QItemSelectionModel.Select)
 
     def update(self):
+        cur = self.carList.currentIndex()
+        if cur.isValid():
+            row = cur.row()
+        else:
+            row = 0
         self.carModel.select()
         self.carList.reset()
+        self.selectRow(row)

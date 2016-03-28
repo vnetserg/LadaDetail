@@ -50,7 +50,11 @@ class PhotoFormController(GenericFormController):
     def _setPhoto(self, filename):
         for label in self._photoLabels:
             w, h = label.width(), label.height()
-            label.setPixmap(QtGui.QPixmap(filename).scaled(w, h, QtCore.Qt.KeepAspectRatio))
+            pixmap = QtGui.QPixmap(filename)
+            if not pixmap.isNull():
+                label.setPixmap(pixmap.scaled(w, h, QtCore.Qt.KeepAspectRatio))
+            else:
+                label.setPixmap(pixmap)
 
     def _clearAll(self):
         self._setPhoto(None)

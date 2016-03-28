@@ -76,12 +76,26 @@ class ForeignFormController(GenericFormController):
     def _clearAll(self):
         super()._clearAll()
         for source in self._sources.keys():
-            source.setValue(self._sources[source]["records"][0].value(self._sources[source]["column"]))
-            #for display in self._proxyDisplays[source]:
-            #    display["widget"].setText("")
+            records = self._sources[source]["records"]
+            if records:
+                source.setValue(records[0].value(self._sources[source]["column"]))
 
-    def _doCommit(self):
-        super()._doCommit()
+    def _selectionChanged(self, cur, prev = None):
+        super()._selectionChanged(cur, prev)
+        if not cur.isValid():
+            for source in self._sources.keys():
+                for display in self._proxyDisplays[source]:
+                    display["widget"].setText("")
+
+    def _insertPossible(self):
+        errText = "Добавление невозможно: в базе данных нет ни одной записи '{}'."
+        hack = {"customer": "Клиент", "shop": "Магазин", "employee": "Сотрудник"}
+        for source in self._sources.keys():
+            records = self._sources[source]["records"]
+            if not records:
+                return errText.format(hack.get(self._sources[source]["table"],
+                    self._sources[source]["table"]))
+        return False
 
     def update(self):
         super().update()

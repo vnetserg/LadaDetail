@@ -51,8 +51,7 @@ CREATE TABLE orders(
     employee_id INT NOT NULL,
     shop_id INT NOT NULL,
     regdate date NOT NULL,
-    price INT NOT NULL,
-    received BOOLEAN NOT NULL,
+    price INT NOT NULL DEFAULT 0,
 
     FOREIGN KEY (customer_id)
         REFERENCES customer(id)

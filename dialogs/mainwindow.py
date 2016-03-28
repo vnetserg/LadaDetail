@@ -9,6 +9,7 @@ from controllers.photoformcontroller import PhotoFormController
 from controllers.foreignformcontroller import ForeignFormController
 from controllers.warehousecontroller import WarehouseController
 from controllers.cardetailcontroller import CarDetailController
+from controllers.ordercontroller import OrderController
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, dbase, parent = None):
@@ -243,12 +244,62 @@ class MainWindow(QtWidgets.QMainWindow):
         self._carDetailForm = CarDetailController(self.ui.carListView_2,
             self.ui.carDetailListView, self.ui.carDetailAddButton,
             self.ui.carDetailDeleteButton, self.dbase)
+        # Форма "Заказы":
+        orderForm = ForeignFormController("orders", self.dbase,
+            {"widget": self.ui.orderListView, "role": "view",
+                "format": "#{id}"},
+            {"widget": self.ui.orderAddButton, "role": "insert"},
+            {"widget": self.ui.orderDeleteButton, "role": "delete"},
+            {"widget": self.ui.orderSaveButton, "role": "commit"},
+            {"widget": self.ui.orderCancelButton, "role": "rollback"},
+            {"widget": self.ui.orderDateLabel, "role": "display",
+                "column": "regdate"},
+            {"widget": self.ui.orderPriceLabel, "role": "display",
+                "column": "price"},
+            {"widget": self.ui.orderPriceLabel_2, "role": "display",
+                "column": "price"},
+            {"widget": self.ui.orderPriceSpin, "role": "edit",
+                "column": "price"},
+            {"widget": self.ui.orderClientSpin, "role": "edit",
+                "column": "customer_id"},
+            {"widget": self.ui.orderShopSpin, "role": "edit",
+                "column": "shop_id"},
+            {"widget": self.ui.orderEmpSpin, "role": "edit",
+                "column": "employee_id"},
+            {"widget": self.ui.orderDateEdit, "role": "edit",
+                "column": "regdate"},
+
+            {"widget": self.ui.orderClientLabel, "role": "proxy_display",
+                "source": self.ui.orderClientSpin, "table": "customer",
+                "column": "id", "format": "{lastname} {firstname:.1}. {middlename:.1}."},
+            {"widget": self.ui.orderEmpLabel, "role": "proxy_display",
+                "source": self.ui.orderEmpSpin, "table": "employee",
+                "column": "id", "format": "{lastname} {firstname:.1}. {middlename:.1}."},
+            {"widget": self.ui.orderShopLabel, "role": "proxy_display",
+                "source": self.ui.orderShopSpin, "table": "shop",
+                "column": "id", "format": "{name}"},
+
+            {"widget": self.ui.orderClientCombo, "role": "proxy_edit",
+                "source": self.ui.orderClientSpin, "table": "customer",
+                "column": "id", "format": "{lastname} {firstname:.1}. {middlename:.1}."},
+            {"widget": self.ui.orderEmpCombo, "role": "proxy_edit",
+                "source": self.ui.orderEmpSpin, "table": "employee",
+                "column": "id", "format": "{lastname} {firstname:.1}. {middlename:.1}."},
+            {"widget": self.ui.orderShopCombo, "role": "proxy_edit",
+                "source": self.ui.orderShopSpin, "table": "shop",
+                "column": "id", "format": "{name}"},
+        )
+        self.setupForm(orderForm, self.ui.orderEditButton, self.ui.orderStack,
+            self.ui.orderReadPage, self.ui.orderWritePage)
+        self._orderForm = OrderController(orderForm, self.ui.orderDetailView,
+            self.ui.orderDetailAddButton, self.ui.orderDetailEditButton,
+            self.ui.orderDetailDeleteButton, self.dbase)
 
     def setupForm(self, form, editbutton, stack, readpage, writepage):
         form.currentRecordChanged.connect(
-            lambda: editbutton.setEnabled(True))
+            lambda cur: editbutton.setEnabled(True))
         form.currentRecordChanged.connect(
-            lambda: stack.setCurrentWidget(readpage))
+            lambda cur: stack.setCurrentWidget(readpage))
         form.recordDeleted.connect(
             lambda: editbutton.setEnabled(False))
         form.recordInserted.connect(
@@ -267,7 +318,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def actionTriggered(self, cur_action):
         mapping = {
             self.ui.view_clients: (self.ui.page_clients, self._clientForm),
-            self.ui.view_orders: (self.ui.page_orders, None),
+            self.ui.view_orders: (self.ui.page_orders, self._orderForm),
             self.ui.view_employees: (self.ui.page_employees, self._empForm),
             self.ui.view_shops: (self.ui.page_shops, self._shopForm),
             self.ui.view_warehouse: (self.ui.page_warehouse, self._warehouseForm),
@@ -281,4 +332,3 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.stackedWidget.setCurrentWidget(page)
         if form:
             form.update()
-            form.selectRow(0)

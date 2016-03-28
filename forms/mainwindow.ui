@@ -14,7 +14,7 @@
    <string>Лада Деталь</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_11">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -33,7 +33,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="page_cars">
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -2869,6 +2869,9 @@
                      <property name="maximum">
                       <number>1000000</number>
                      </property>
+                     <property name="singleStep">
+                      <number>500</number>
+                     </property>
                     </widget>
                    </item>
                   </layout>
@@ -3082,12 +3085,26 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_31">
            <item row="0" column="0" colspan="2">
-            <widget class="QListView" name="ordersListView">
+            <widget class="QListView" name="orderListView">
              <property name="maximumSize">
               <size>
                <width>178</width>
                <height>16777215</height>
               </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="orderAddButton">
+             <property name="text">
+              <string>Добавить</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="orderDeleteButton">
+             <property name="text">
+              <string>Удалить</string>
              </property>
             </widget>
            </item>
@@ -3101,11 +3118,11 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QStackedWidget" name="formStack_6">
+            <widget class="QStackedWidget" name="orderStack">
              <property name="currentIndex">
               <number>0</number>
              </property>
-             <widget class="QWidget" name="formReadPage_6">
+             <widget class="QWidget" name="orderReadPage">
               <layout class="QGridLayout" name="gridLayout_32">
                <property name="leftMargin">
                 <number>0</number>
@@ -3136,6 +3153,12 @@
                 <layout class="QGridLayout" name="gridLayout_33">
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_57">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3152,6 +3175,12 @@
                  </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_59">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3174,6 +3203,12 @@
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3189,7 +3224,22 @@
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLabel" name="orderManagerLabel">
+                  <widget class="QLabel" name="orderEmpLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>340</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid;</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -3197,6 +3247,12 @@
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_60">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3213,6 +3269,43 @@
                  </item>
                  <item row="1" column="1">
                   <widget class="QLabel" name="orderShopLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>340</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLabel" name="orderDateLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>340</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid;</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -3220,11 +3313,48 @@
                  </item>
                  <item row="0" column="1">
                   <widget class="QLabel" name="orderClientLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>340</width>
+                     <height>0</height>
+                    </size>
+                   </property>
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
                      <height>30</height>
                     </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLabel" name="orderPriceLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>340</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: 1px solid;</string>
                    </property>
                    <property name="text">
                     <string/>
@@ -3233,6 +3363,12 @@
                  </item>
                  <item row="4" column="0">
                   <widget class="QLabel" name="label_65">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3240,44 +3376,17 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>Цена:</string>
+                    <string>Сумма:</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="2" rowspan="5">
-                  <spacer name="horizontalSpacer_18">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QLabel" name="orderDateLabel">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QLabel" name="orderPriceLabel">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item row="2" column="2">
-                <widget class="QPushButton" name="shopEditButton_3">
+                <widget class="QPushButton" name="orderEditButton">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -3294,7 +3403,7 @@
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="formEditPage_6">
+             <widget class="QWidget" name="orderWritePage">
               <layout class="QGridLayout" name="gridLayout_34">
                <property name="leftMargin">
                 <number>0</number>
@@ -3309,7 +3418,7 @@
                 <number>0</number>
                </property>
                <item row="2" column="2">
-                <widget class="QPushButton" name="shopSaveButton_3">
+                <widget class="QPushButton" name="orderSaveButton">
                  <property name="text">
                   <string>Сохранить</string>
                  </property>
@@ -3329,7 +3438,7 @@
                 </spacer>
                </item>
                <item row="2" column="3">
-                <widget class="QPushButton" name="shopCancelButton_3">
+                <widget class="QPushButton" name="orderCancelButton">
                  <property name="text">
                   <string>Отменить</string>
                  </property>
@@ -3337,8 +3446,36 @@
                </item>
                <item row="0" column="0" rowspan="2" colspan="4">
                 <layout class="QGridLayout" name="gridLayout_35">
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_66">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Сумма:</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_63">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3353,14 +3490,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="orderManagerEdit"/>
-                 </item>
-                 <item row="0" column="1" colspan="2">
-                  <widget class="QLineEdit" name="orderClientEdit"/>
-                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_61">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3377,6 +3514,12 @@
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_62">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3391,11 +3534,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1" colspan="2">
-                  <widget class="QLineEdit" name="orderShopEdit"/>
-                 </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_64">
+                   <property name="maximumSize">
+                    <size>
+                     <width>90</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -3410,30 +3556,247 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_66">
-                   <property name="font">
-                    <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
+                 <item row="1" column="1" colspan="2">
+                  <widget class="QStackedWidget" name="stackedWidget_4">
+                   <property name="currentIndex">
+                    <number>0</number>
                    </property>
-                   <property name="text">
-                    <string>Цена:</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   <widget class="QWidget" name="page_5">
+                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QComboBox" name="orderShopCombo"/>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="page_6">
+                    <layout class="QHBoxLayout" name="horizontalLayout_16">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="orderShopSpin">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                       <property name="maximum">
+                        <number>1000000</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="3" column="1" colspan="2">
+                  <widget class="QDateEdit" name="orderDateEdit">
+                   <property name="displayFormat">
+                    <string>dd.MM.yyyy</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="1">
-                  <widget class="QLineEdit" name="orderDateEdit"/>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="orderPriceEdit">
-                   <property name="readOnly">
-                    <bool>true</bool>
+                 <item row="0" column="1" colspan="2">
+                  <widget class="QStackedWidget" name="stackedWidget_3">
+                   <property name="currentIndex">
+                    <number>0</number>
                    </property>
+                   <widget class="QWidget" name="page_3">
+                    <layout class="QVBoxLayout" name="verticalLayout">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QComboBox" name="orderClientCombo"/>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="page_4">
+                    <layout class="QHBoxLayout" name="horizontalLayout_17">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="orderClientSpin">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                       <property name="maximum">
+                        <number>1000000</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="2" column="1" colspan="2">
+                  <widget class="QStackedWidget" name="stackedWidget_5">
+                   <property name="currentIndex">
+                    <number>0</number>
+                   </property>
+                   <widget class="QWidget" name="page_7">
+                    <layout class="QVBoxLayout" name="verticalLayout_4">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QComboBox" name="orderEmpCombo"/>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="page_8">
+                    <layout class="QHBoxLayout" name="horizontalLayout_15">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="orderEmpSpin">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                       <property name="maximum">
+                        <number>1000000</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="4" column="1" colspan="2">
+                  <widget class="QStackedWidget" name="stackedWidget_6">
+                   <property name="currentIndex">
+                    <number>1</number>
+                   </property>
+                   <widget class="QWidget" name="page_9">
+                    <layout class="QHBoxLayout" name="horizontalLayout_18">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="orderPriceSpin">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="page_10">
+                    <layout class="QVBoxLayout" name="verticalLayout_6">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="orderPriceLabel_2">
+                       <property name="styleSheet">
+                        <string notr="true">border: 1px solid;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </widget>
                  </item>
                 </layout>
@@ -3451,25 +3814,50 @@
            <string>Состав заказа</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
-           <item row="0" column="0" colspan="2">
-            <widget class="QTableView" name="tableView">
+           <item row="0" column="0" colspan="3">
+            <widget class="QTableView" name="orderDetailView">
              <property name="minimumSize">
               <size>
                <width>0</width>
                <height>173</height>
               </size>
              </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="orderDetailAddButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Добавить</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="orderDetailEditButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Редактировать</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="orderDetailDeleteButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Удалить</string>
              </property>

@@ -11,7 +11,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, QModelIndex, \
 from models.complexlistmodel import ComplexListModel
 
 class GenericFormController(QObject):
-    currentRecordChanged = pyqtSignal()
+    currentRecordChanged = pyqtSignal(object)
     recordInserted = pyqtSignal()
     recordCommitted = pyqtSignal()
     recordRollbacked = pyqtSignal()
@@ -83,10 +83,11 @@ class GenericFormController(QObject):
         if cur.isValid():
             self.mapper.setCurrentModelIndex(self.model.index(cur.row(), cur.column()))
             self._deleteButton.setEnabled(True)
+            self.currentRecordChanged.emit(self.model.record(cur.row()))
         else:
             self._deleteButton.setEnabled(False)
             self._clearAll()
-        self.currentRecordChanged.emit()
+            self.currentRecordChanged.emit(None)
 
     def _doCommit(self):
         if self._insertionMode is False:
@@ -97,9 +98,9 @@ class GenericFormController(QObject):
             if self.model.setRecord(ind, record):
                 self.model.submitAll()
                 self.model.select()
-                self.selectRow(ind)
                 self.recordCommitted.emit()
                 self._view.reset()
+                self.selectRow(ind)
             else:
                 print("Commit error:", self.model.lastError().text())
                 QMessageBox.critical(None, "Ошибка редактирования",
@@ -136,10 +137,16 @@ class GenericFormController(QObject):
         self._clearAll()
     
     def _doInsert(self):
+        errText = self._insertPossible()
+        if errText:
+            return QMessageBox.critical(None, "Ошибка добавления", errText)
         self._insertionMode = True
         self._view.selectionModel().clearSelection()
         self._clearAll()
         self.recordInserted.emit()
+
+    def _insertPossible(self):
+        return False
 
     def _getRecord(self):
         record = QSqlRecord()
@@ -198,9 +205,25 @@ class GenericFormController(QObject):
         return text
 
     def update(self):
+        cur = self._view.currentIndex()
+        if cur.isValid():
+            row = cur.row()
+        else:
+            row = 0
         self.model.select()
+        self.selectRow(row)
 
     def selectRow(self, row):
         self._view.selectionModel().clearSelection()
-        self._view.selectionModel().setCurrentIndex(
-            self.model.index(row, 0), QItemSelectionModel.Select)
+        if self.model.rowCount():
+            self._view.selectionModel().setCurrentIndex(
+                self.model.index(row, 0), QItemSelectionModel.Select)
+        else:
+            self._selectionChanged(QModelIndex(), QModelIndex())
+
+    def currentRecord(self):
+        cur = self._view.currentIndex()
+        if cur.isValid():
+            return self.model.record(cur.row())
+        else:
+            return None

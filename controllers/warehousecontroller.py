@@ -119,8 +119,14 @@ class WarehouseController(QObject):
         self.setShopIndex(self.list.currentIndex().row())
 
     def update(self):
+        cur = self.list.currentIndex()
+        if cur.isValid():
+            row = cur.row()
+        else:
+            row = 0
         self.shopModel.select()
         self.list.reset()
+        self.selectRow(row)
 
     def selectRow(self, row):
         self.list.selectionModel().clearSelection()
