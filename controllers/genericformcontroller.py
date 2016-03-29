@@ -4,7 +4,7 @@ from itertools import chain
 
 from PyQt5.QtWidgets import QDataWidgetMapper, QListView, QLabel, QPushButton, \
     QLineEdit, QTextEdit, QDateEdit, QPlainTextEdit, QMessageBox, QSpinBox
-from PyQt5.QtSql import QSqlTableModel, QSqlRecord
+from PyQt5.QtSql import QSqlTableModel, QSqlRecord, QSqlQuery
 from PyQt5.QtCore import QObject, pyqtSignal, QModelIndex, \
     QItemSelectionModel, QDate
 
@@ -43,11 +43,30 @@ class GenericFormController(QObject):
         self._edits = {}
         self._insertionMode = False
 
+        self._checkPrivileges()
+
         for widget in widgets:
             self.addWidget(**widget)
 
         if self.model.rowCount() > 0:
             self.selectRow(0)
+
+    def _checkPrivileges(self):
+        query = QSqlQuery("SHOW GRANTS")
+        only_select = None
+        table_pattern = "`{}`".format(self.tablename).lower()
+        while query.next():
+            s = query.value(0).lower()
+            if table_pattern in s:
+                if "select" in s and only_select is None:
+                    only_select = True
+                else:
+                    only_select = False
+        self.only_select = bool(only_select)
+        #if self.only_select:
+        #    self.only_select = True
+        #    self._insertButton.setEnabled(False)
+        #    self._deleteButton.setEnabled(False)
 
     def addWidget(self, widget, role, **kw):
         if role == "view" and isinstance(widget, QListView):
@@ -62,9 +81,15 @@ class GenericFormController(QObject):
             self.mapper.addMapping(widget, self._columns[kw["column"]])
         elif role == "insert" and isinstance(widget, QPushButton):
             self._insertButton = widget
+            if self.only_select:
+                widget.setEnabled(False)
+            else:
+                widget.setEnabled(True)
             widget.clicked.connect(self._doInsert)
         elif role == "delete" and isinstance(widget, QPushButton):
             self._deleteButton = widget
+            if self.only_select:
+                widget.setEnabled(False)
             widget.clicked.connect(self._doDelete)
         elif role == "commit" and isinstance(widget, QPushButton):
             self._commitButton = widget
@@ -82,7 +107,8 @@ class GenericFormController(QObject):
     def _selectionChanged(self, cur, prev = None):
         if cur.isValid():
             self.mapper.setCurrentModelIndex(self.model.index(cur.row(), cur.column()))
-            self._deleteButton.setEnabled(True)
+            if not self.only_select:
+                self._deleteButton.setEnabled(True)
             self.currentRecordChanged.emit(self.model.record(cur.row()))
         else:
             self._deleteButton.setEnabled(False)

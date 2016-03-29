@@ -21,8 +21,26 @@ class CarDetailController(QObject):
         self.carList.setModel(ComplexListModel(self.carModel, "{name}"))
         self.carList.selectionModel().currentChanged.connect(self.carListSelectionChanged)
 
+        self._checkPrivileges()
+        if self.only_select:
+            self.addButton.setEnabled(False)
+            self.deleteButton.setEnabled(False)
+
         self.addButton.clicked.connect(self.addButtonClicked)
         self.deleteButton.clicked.connect(self.deleteButtonClicked)
+
+    def _checkPrivileges(self):
+        query = QSqlQuery("SHOW GRANTS")
+        only_select = None
+        table_pattern = "`{}`".format("car_detail").lower()
+        while query.next():
+            s = query.value(0).lower()
+            if table_pattern in s:
+                if "select" in s and only_select is None:
+                    only_select = True
+                else:
+                    only_select = False
+        self.only_select = bool(only_select)
 
     def carListSelectionChanged(self, cur, prev):
         if not cur.isValid():
@@ -47,6 +65,7 @@ class CarDetailController(QObject):
         self.deleteButton.setEnabled(False)
 
     def detailListSelectionChanged(self, cur, prev):
+        if self.only_select: return
         if cur.isValid():
             self.deleteButton.setEnabled(True)
         else:

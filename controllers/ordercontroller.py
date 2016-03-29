@@ -19,6 +19,11 @@ class OrderController(QObject):
         form.recordInserted.connect(lambda: self.recordChanged(None))
         form.recordDeleted.connect(lambda: self.recordChanged(None))
 
+        if form.only_select:
+            self.addButton.setEnabled(False)
+            self.editButton.setEnabled(False)
+            self.deleteButton.setEnabled(False)
+
         self.addButton.clicked.connect(self.addButtonClicked)
         self.editButton.clicked.connect(self.editButtonClicked)
         self.deleteButton.clicked.connect(self.deleteButtonClicked)
@@ -31,7 +36,8 @@ class OrderController(QObject):
             self.orderTable.setModel(None)
             self._hiddingHack(True)
         else:
-            self.addButton.setEnabled(True)
+            if not self.form.only_select:
+                self.addButton.setEnabled(True)
             self.detailModel = QSqlQueryModel()
             query = "SELECT detail.id as id, detail.article as article, detail.name as name, order_detail.quantity as qnt, \
                     detail.price as sole_price, detail.price*order_detail.quantity as total_price\
@@ -66,6 +72,7 @@ class OrderController(QObject):
             ui.emp_hack.setCurrentWidget(ui.emp_ok_page)
 
     def tableSelectionChanged(self, cur, prev):
+        if self.form.only_select: return
         if cur.isValid():
             self.deleteButton.setEnabled(True)
             self.editButton.setEnabled(True)

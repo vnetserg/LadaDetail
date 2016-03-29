@@ -296,8 +296,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.orderDetailDeleteButton, self.dbase, self)
 
     def setupForm(self, form, editbutton, stack, readpage, writepage):
-        form.currentRecordChanged.connect(
-            lambda cur: editbutton.setEnabled(bool(cur)))
+        if not form.only_select:
+            form.currentRecordChanged.connect(
+                lambda cur: editbutton.setEnabled(bool(cur)))
         form.currentRecordChanged.connect(
             lambda cur: stack.setCurrentWidget(readpage))
         form.recordDeleted.connect(
@@ -310,7 +311,7 @@ class MainWindow(QtWidgets.QMainWindow):
             lambda: stack.setCurrentWidget(readpage))
         editbutton.clicked.connect(
             lambda: stack.setCurrentWidget(writepage))
-        if form.recordsCount() > 0:
+        if form.recordsCount() > 0 and not form.only_select:
             editbutton.setEnabled(True)
         else:
             editbutton.setEnabled(False)
