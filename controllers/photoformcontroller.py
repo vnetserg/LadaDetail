@@ -48,6 +48,7 @@ class PhotoFormController(GenericFormController):
         self._setPhoto(None)
 
     def _setPhoto(self, filename):
+        self._currentImage = filename
         for label in self._photoLabels:
             w, h = label.width(), label.height()
             pixmap = QtGui.QPixmap(filename)

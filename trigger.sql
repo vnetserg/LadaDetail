@@ -44,8 +44,8 @@ FOR EACH ROW BEGIN
     END IF;
 END$$
 
-CREATE TRIGGER order_detail_after_delete
-AFTER DELETE ON order_detail
+CREATE TRIGGER order_detail_before_delete
+BEFORE DELETE ON order_detail
 FOR EACH ROW BEGIN
     DECLARE sid INT;
     DECLARE cur_qnt INT DEFAULT 0;
@@ -58,7 +58,11 @@ FOR EACH ROW BEGIN
     ELSE
         UPDATE shop_detail SET quantity = quantity + OLD.quantity WHERE detail_id = OLD.detail_id AND shop_id = sid LIMIT 1;
     END IF;
+END$$
 
+CREATE TRIGGER order_detail_after_delete
+AFTER DELETE ON order_detail
+FOR EACH ROW BEGIN
     UPDATE orders SET price = (SELECT SUM(detail.price*order_detail.quantity)
         FROM order_detail INNER JOIN detail ON order_detail.detail_id = detail.id
         WHERE order_detail.order_id = OLD.order_id)
@@ -81,6 +85,28 @@ FOR EACH ROW BEGIN
         FROM order_detail INNER JOIN detail ON order_detail.detail_id = detail.id
         WHERE order_detail.order_id = NEW.order_id)
     WHERE orders.id = NEW.order_id;
+END$$
+
+CREATE TRIGGER detail_after_update
+AFTER UPDATE ON detail
+FOR EACH ROW BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE order_id INT;
+    DECLARE cur CURSOR FOR SELECT DISTINCT orders.id FROM orders
+            INNER JOIN order_detail ON orders.id = order_detail.order_id
+            WHERE order_detail.detail_id = NEW.id;
+    DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
+
+    OPEN cur;
+    REPEAT
+        FETCH cur INTO order_id;
+        IF NOT done THEN
+            UPDATE orders SET price = (SELECT SUM(detail.price*order_detail.quantity)
+                FROM order_detail INNER JOIN detail ON order_detail.detail_id = detail.id
+                WHERE order_detail.order_id = order_id)
+            WHERE orders.id = order_id;
+        END IF;
+    UNTIL done END REPEAT;
 END$$
 
 DELIMITER ;

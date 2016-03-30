@@ -12,7 +12,7 @@ CREATE TABLE customer(
     lastname varchar(50) NOT NULL,
     middlename varchar(50) NOT NULL,
     email varchar(50) NOT NULL,
-    birthdate date NOT NULL,
+    birthdate date NOT NULL CHECK(TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) >= 18),
     regdate date NOT NULL,
     passport varchar(250) NOT NULL,
     phone varchar(20) NOT NULL
@@ -31,14 +31,14 @@ CREATE TABLE employee(
     firstname varchar(50) NOT NULL,
     lastname varchar(50) NOT NULL,
     middlename varchar(50) NOT NULL,
-    birthdate date NOT NULL,
+    birthdate date NOT NULL CHECK(TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) >= 18),
     passport varchar(250) NOT NULL,
     address varchar(250) NULL,
     department varchar(100) NOT NULL,
     shop_id INT NOT NULL,
     position varchar(100) NOT NULL,
     empdate date NOT NULL,
-    salary int NOT NULL,
+    salary int NOT NULL CHECK(salary >= 7500),
 
     FOREIGN KEY (shop_id)
         REFERENCES shop(id)

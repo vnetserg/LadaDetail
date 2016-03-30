@@ -21,7 +21,7 @@ def report_day_sales(for_date, file, dbase):
         rows.append("<tr><td align='center'>{}</td><td align='center'>{}</td><td align='center'>{}</td></tr>".format(
             query.value("name"), int(query.value("qnt")), int(query.value("price"))))
         qnt_total += int(query.value("qnt"))
-        price_total = int(query.value("price"))
+        price_total += int(query.value("price"))
     rows.append("<b><tr><td align='right'>{}</td><td align='center'>{}</td><td align='center'>{}</td></tr></b>".format(
         "Итого:", qnt_total, price_total))
     date = datetime.date.today().strftime("%d.%m.%Y")
@@ -50,7 +50,7 @@ def report_month_sales(file, dbase):
             "{} {}. {}.".format(query.value("lastname"), query.value("firstname")[0], query.value("middlename")[0]),
             int(query.value("qnt")), int(query.value("price"))))
         qnt_total += int(query.value("qnt"))
-        price_total = int(query.value("price"))
+        price_total += int(query.value("price"))
     rows.append("<b><tr><td align='right'>{}</td><td align='center'>{}</td><td align='center'>{}</td></tr></b>".format(
         "Итого:", qnt_total, price_total))
     date = datetime.date.today().strftime("%d.%m.%Y")
