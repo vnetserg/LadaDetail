@@ -1119,6 +1119,13 @@
                  </item>
                  <item row="3" column="1">
                   <widget class="QDateEdit" name="clientBirthdateEdit">
+                   <property name="maximumDate">
+                    <date>
+                     <year>1998</year>
+                     <month>3</month>
+                     <day>30</day>
+                    </date>
+                   </property>
                    <property name="displayFormat">
                     <string>dd.MM.yyyy</string>
                    </property>
@@ -1770,6 +1777,13 @@
                  </item>
                  <item row="3" column="1" colspan="3">
                   <widget class="QDateEdit" name="empBirthdateEdit">
+                   <property name="maximumDate">
+                    <date>
+                     <year>1998</year>
+                     <month>3</month>
+                     <day>30</day>
+                    </date>
+                   </property>
                    <property name="displayFormat">
                     <string>dd.MM.yyyy</string>
                    </property>
@@ -1851,6 +1865,9 @@
                  </item>
                  <item row="8" column="1" colspan="3">
                   <widget class="QSpinBox" name="empSalaryEdit">
+                   <property name="minimum">
+                    <number>7500</number>
+                   </property>
                    <property name="maximum">
                     <number>1000000</number>
                    </property>
