@@ -10,6 +10,8 @@ from controllers.foreignformcontroller import ForeignFormController
 from controllers.warehousecontroller import WarehouseController
 from controllers.cardetailcontroller import CarDetailController
 from controllers.ordercontroller import OrderController
+from dialogs.getdate import GetDate
+from report import report_day_sales, report_month_sales
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, dbase, parent = None):
@@ -18,6 +20,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.configUI()
+
+    def reportDay(self):
+        dlg = GetDate(self)
+        dlg.exec_()
+        if not dlg.date: return
+        filename, ok = QtWidgets.QFileDialog.getSaveFileName(self, u'Сохранить', filter = u"Документ PDF (*.pdf)")
+        if ok:
+            report_day_sales(dlg.date, filename, self.dbase)
+
+    def reportMonth(self):
+        filename, ok = QtWidgets.QFileDialog.getSaveFileName(self, u'Сохранить', filter = u"Документ PDF (*.pdf)")
+        if ok:
+            report_month_sales(filename, self.dbase)
 
     def configUI(self):
         # Устанавливаем иконки к действиям:
@@ -30,6 +45,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.view_warehouse.setIcon(get_icon("warehouse"))
         self.ui.view_cardetails.setIcon(get_icon("cardetails"))
         self.ui.view_orders.setIcon(get_icon("order"))
+        self.ui.report_day.triggered.connect(self.reportDay)
+        self.ui.report_month.triggered.connect(self.reportMonth)
         # Настраиваем переключение форм:
         actions = [self.ui.view_clients, self.ui.view_orders,
             self.ui.view_employees, self.ui.view_shops,

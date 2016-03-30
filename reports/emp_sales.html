@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Отчёт о продажах работниками</title>
+    </head>
+    <body>
+        <div align='right'>
+            <img width=300 src='/home/sergio/Code/Python/LadaDetail/reports/logo.png'>
+        </div>
+        <div align='center'>
+            <h2>Отчёт о продажах работниками ПАО "ЛАДА Деталь"</h2>
+            <h3>За месяц: {for_month}</h3>
+            <table border=1>
+                <tr><th>Работник</th><th>Оформлено заказов</th><th>Сумма, руб</th></tr>
+                {rows}
+            </table>
+        </div>
+        <div align='left'>
+            <h4>Главный бухгалтер Ульянова Е.И.: ____________________<br>
+            Дата: {date}</h4>
+        </div>
+    </body>
+</html>

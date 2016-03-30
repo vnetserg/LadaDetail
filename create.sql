@@ -14,16 +14,16 @@ CREATE TABLE customer(
     email varchar(50) NOT NULL,
     birthdate date NOT NULL,
     regdate date NOT NULL,
-    passport varchar(250) NULL,
-    phone varchar(20) NULL
+    passport varchar(250) NOT NULL,
+    phone varchar(20) NOT NULL
 );
 
 CREATE TABLE shop(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name varchar(100) NULL,
-    description varchar(100) NULL,
-    address varchar(250) NULL,
-    phone varchar(20) NULL
+    name varchar(100) NOT NULL,
+    description varchar(1000) NOT NULL,
+    address varchar(250) NOT NULL,
+    phone varchar(20) NOT NULL
 );
 
 CREATE TABLE employee(
@@ -32,7 +32,7 @@ CREATE TABLE employee(
     lastname varchar(50) NOT NULL,
     middlename varchar(50) NOT NULL,
     birthdate date NOT NULL,
-    passport varchar(250) NULL,
+    passport varchar(250) NOT NULL,
     address varchar(250) NULL,
     department varchar(100) NOT NULL,
     shop_id INT NOT NULL,

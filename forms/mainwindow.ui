@@ -33,7 +33,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>7</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_cars">
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -3418,8 +3418,6 @@
                       </widget>
                      </item>
                     </layout>
-                    <zorder>orderEmpLabel</zorder>
-                    <zorder>label_75</zorder>
                    </widget>
                   </widget>
                  </item>
@@ -4073,6 +4071,8 @@
     <property name="title">
      <string>Отчёты</string>
     </property>
+    <addaction name="report_day"/>
+    <addaction name="report_month"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -4175,6 +4175,26 @@
   <action name="file_quit">
    <property name="text">
     <string>Выход</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Продажи за день</string>
+   </property>
+  </action>
+  <action name="report_day">
+   <property name="text">
+    <string>Продажи за день</string>
+   </property>
+  </action>
+  <action name="report_month">
+   <property name="text">
+    <string>Заказы за месяц</string>
+   </property>
+  </action>
+  <action name="report_warehouse">
+   <property name="text">
+    <string>Текущий склад</string>
    </property>
   </action>
  </widget>

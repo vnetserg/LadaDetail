@@ -47,7 +47,6 @@ END$$
 CREATE TRIGGER order_detail_after_delete
 AFTER DELETE ON order_detail
 FOR EACH ROW BEGIN
-    DECLARE msg VARCHAR(255);
     DECLARE sid INT;
     DECLARE cur_qnt INT DEFAULT 0;
 
