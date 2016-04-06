@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 
 from ui.ui_mainwindow import Ui_MainWindow
 from util import get_icon
